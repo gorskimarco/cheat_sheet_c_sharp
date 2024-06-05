@@ -1,12 +1,144 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css">
+    <title>C# Cheat Sheet</title>
 </head>
-
 <body>
-    <h1>Hey Test here</h1>
-<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+<div class="content">
+    <div class="jumbotron">
+        <h1 class="headline">C# Cheat Sheet</h1>
+        <div>
+            Welcome to my C# cheat sheet <br>
+            This sheet is still in progress and will be updated as soon as possible.
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Data Types</h2>
+    <div>Value Types:</div>
+    <pre><code>int, char, float, double, bool, byte, short, long, decimal</code></pre>
+
+    <div>Reference Types:</div>
+    <pre><code>string, class, array, interface, delegate</code></pre>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Variables</h2>
+    <div>In C#, variable names are written in camelCase:</div>
+    <pre><code>int num = 999;</code></pre>
+    <pre><code>string word = "Hello World";</code></pre>
+    <pre><code>bool isTrue = true;</code></pre>
+    <pre><code>double price = 19.99;</code></pre>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Basic Syntax</h2>
+    <div>Creating a class:</div>
+    <pre><code>public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}</code></pre>
+
+    <div>Creating a method:</div>
+    <pre><code>public void SayHello()
+{
+    Console.WriteLine("Hello!");
+}</code></pre>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Control Structures</h2>
+    <div>Conditional Statements:</div>
+    <pre><code>if (condition)
+{
+    // code to execute if condition is true
+}
+else
+{
+    // code to execute if condition is false
+}</code></pre>
+
+    <div>Loops:</div>
+    <div>For Loop:</div>
+    <pre><code>for (int i = 0; i < 10; i++)
+{
+    Console.WriteLine(i);
+}</code></pre>
+
+    <div>While Loop:</div>
+    <pre><code>int i = 0;
+while (i < 10)
+{
+    Console.WriteLine(i);
+    i++;
+}</code></pre>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Methods</h2>
+    <div>Creating a method with parameters:</div>
+    <pre><code>public int AddNumbers(int num1, int num2)
+{
+    return num1 + num2;
+}</code></pre>
+
+    <div>Calling a method:</div>
+    <pre><code>int result = AddNumbers(5, 10);
+Console.WriteLine(result); // Outputs: 15</code></pre>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Properties</h2>
+    <div>Creating a property:</div>
+    <pre><code>public class Car
+{
+    public string Color { get; set; }
+    public string Model { get; set; }
+}</code></pre>
+
+    <div>Using a property:</div>
+    <pre><code>Car myCar = new Car();
+myCar.Color = "Red";
+myCar.Model = "Toyota";
+Console.WriteLine(myCar.Color); // Outputs: Red</code></pre>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Arrays</h2>
+    <div>Declaring and initializing an array:</div>
+    <pre><code>int[] numbers = new int[] {1, 2, 3, 4, 5};
+string[] words = {"Hello", "World"};</code></pre>
+
+    <div>Accessing array elements:</div>
+    <pre><code>int firstNumber = numbers[0];
+Console.WriteLine(firstNumber); // Outputs: 1
+string firstWord = words[0];
+Console.WriteLine(firstWord); // Outputs: Hello</code></pre>
+</div>
+
+<div style="margin-top: 3em;" class="content_box">
+    <h2>Namespaces</h2>
+    <div>Using a namespace:</div>
+    <pre><code>using System;
+using System.Collections.Generic;</code></pre>
+
+    <div>Creating a namespace:</div>
+    <pre><code>namespace MyNamespace
+{
+    public class MyClass
+    {
+        public void MyMethod()
+        {
+            // Method code here
+        }
+    }
+}</code></pre>
+</div>
+
 </body>
 </html>
