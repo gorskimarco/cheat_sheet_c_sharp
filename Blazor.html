@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blazor Server – Cheat Sheet</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body style="display: flex; flex-direction: column;">
+
+<!-- Navigation -->
+<div class="nav">
+    <a class="nav_element" href="index.html">C#</a>
+    <a class="nav_element" href="EntityFramework.html">Entity Framework</a>
+    <a class="nav_element" href="Blazor.html">Blazor</a>
+    <a class="nav_element" href="SQL.html">SQL</a>
+    <a class="nav_element" href="Recursion.html" style="font-weight: bold;">Recursion</a>
+</div>
+
+
+<!-- Header -->
+<div class="content_box">
+    <h1>Blazor Server – dev-docs</h1>
+    <p>Common patterns and examples for building interactive Blazor Server apps.</p>
+    <p>
+        <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/" target="_blank">
+            → Official Blazor Documentation
+        </a>
+    </p>
+</div>
+
+<!-- RenderMode -->
+<div class="content_box">
+    <h2>Render Mode</h2>
+    <pre><code>&lt;component type="typeof(App)" render-mode="InteractiveServer" /&gt;</code></pre>
+    <p>Use in <code>_Host.cshtml</code> for Blazor Server. Enables SignalR-based interaction.</p>
+</div>
+
+<!-- Lifecycle Methods -->
+<div class="content_box">
+    <h2>Lifecycle Hooks</h2>
+    <pre><code>@code {
+    protected override void OnInitialized()
+    {
+        // Runs once when component is initialized
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Async version for fetching data
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Code after first render (e.g. JS interop)
+        }
+    }
+}</code></pre>
+    <p>
+        <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle" target="_blank">
+            → Component Lifecycle Docs
+        </a>
+    </p>
+</div>
+
+<!-- Data Binding -->
+<div class="content_box">
+    <h2>Data Binding</h2>
+    <pre><code>&lt;input @bind="username" /&gt;
+
+@code {
+    private string username = string.Empty;
+}</code></pre>
+    <p><code>@bind</code> creates two-way binding for inputs and other form elements.</p>
+</div>
+
+<!-- Events -->
+<div class="content_box">
+    <h2>Click Events & Event Handler</h2>
+    <pre><code>&lt;button @onclick="SayHello"&gt;Click me&lt;/button&gt;
+
+@code {
+    private void SayHello()
+    {
+        Console.WriteLine("Hello!");
+    }
+}</code></pre>
+
+    <h3>With Parameters</h3>
+    <pre><code>&lt;button @onclick="() =&gt; GreetUser("Alice")"&gt;Greet Alice&lt;/button&gt;
+
+@code {
+    private void GreetUser(string name)
+    {
+        Console.WriteLine($"Hello, {name}!");
+    }
+}</code></pre>
+</div>
+
+<!-- [Authorize] and Identity -->
+<div class="content_box">
+    <h2>Authorization & Identity</h2>
+    <h3>Use [Authorize] Attribute</h3>
+    <pre><code>@attribute [Authorize]</code></pre>
+    <p>Restricts access to authenticated users only.</p>
+
+    <h3>With Roles</h3>
+    <pre><code>@attribute [Authorize(Roles = "Admin")]</code></pre>
+    <p>Only users in the <code>Admin</code> role may access this component.</p>
+
+    <h3>Show/Hide in Markup</h3>
+    <pre><code>&lt;AuthorizeView&gt;
+    &lt;Authorized&gt;
+        &lt;p&gt;You are logged in!&lt;/p&gt;
+    &lt;/Authorized&gt;
+    &lt;NotAuthorized&gt;
+        &lt;p&gt;Please sign in.&lt;/p&gt;
+    &lt;/NotAuthorized&gt;
+&lt;/AuthorizeView&gt;</code></pre>
+
+    <h3>Inject Authentication State</h3>
+    <pre><code>@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            userName = user.Identity.Name;
+        }
+    }
+}</code></pre>
+
+    <p>
+        <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/security/" target="_blank">
+            → Blazor Security Docs
+        </a>
+    </p>
+</div>
+
+</body>
+<footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; background-color: #f0f0f0; color: #666;">
+    <p>This material is intended for learning purposes only and may contain inaccuracies or omissions.</p>
+</footer>
+
+</html>

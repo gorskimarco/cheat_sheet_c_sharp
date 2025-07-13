@@ -7,6 +7,24 @@ body {
     line-height: 1.6;
 }
 
+.nav {
+    background-color: #292929;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 1em;
+}
+
+.nav_element {
+    padding: 2px 2em;
+    border-radius: 5px;
+}
+
+.nav_element:hover {
+    font-weight: bold;
+}
+
 .jumbotron {
     background-color: #1e1e1e;
     margin: 20px;
@@ -66,6 +84,41 @@ a:hover {
     text-decoration: underline;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table thead tr {
+    background-color: #292929;
+    color: #bb86fc;
+    text-align: left;
+    font-weight: bold;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    color: #e0e0e0;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #292929;
+}
+
+table tbody tr:nth-of-type(even) {
+    background-color: #252525;
+}
+
+table tbody tr:last-of-type {
+    border-bottom: 2px solid #292929;
+}
+
+
 @media (max-width: 768px) {
     .jumbotron, .content_box {
         margin: 10px;
@@ -80,3 +133,5 @@ a:hover {
         font-size: 24px;
     }
 }
+
+

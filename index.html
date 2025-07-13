@@ -4,38 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheet.css">
-    <title>C# Cheat Sheet</title>
+    <title>agorionCode – C# Cheat Sheet</title>
 </head>
-<body>
+<body style="display: flex; flex-direction: column;">
+
+<div class="nav">
+    <a class="nav_element" href="index.html">C#</a>
+    <a class="nav_element" href="EntityFramework.html">Entity Framework</a>
+    <a class="nav_element" href="Blazor.html">Blazor</a>
+    <a class="nav_element" href="SQL.html">SQL</a>
+    <a class="nav_element" href="Recursion.html" style="font-weight: bold;">Recursion</a>
+</div>
+
+
 <div class="content">
     <div class="jumbotron">
-        <h1 class="headline">C# Cheat Sheet</h1>
+        <h1 class="headline">C# dev-docs</h1>
         <div>
-            Welcome to my C# cheat sheet <br>
-            This sheet is still in progress and will be updated as soon as possible.
+            Welcome to the C# Cheat Sheet<br>
+            Helpful .NET summaries and practical examples.<br>
+            <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank">→ Official C# Documentation</a>
         </div>
     </div>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Object-Oriented Programming (OOP)</h2>
+    <div>Three core principles of OOP in C#:</div>
+    <pre><code>1. Abstraction – Hide complexity using abstract classes or interfaces
+2. Encapsulation – Protect internal state using access modifiers (private, public, etc.)
+3. Inheritance – Extend functionality from base classes</code></pre>
+</div>
+
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Comments</h2>
+    <pre><code>// Single-line comment</code></pre>
+    <pre><code>/*
+Multi-line
+comment
+*/</code></pre>
+    <pre><code>// TODO: Task marker in Visual Studio</code></pre>
+    <pre><code>/// XML comment for documentation (used above methods or classes)</code></pre>
+    <pre><code>/**
+XML-style multi-line comment for documentation tools
+**/</code></pre>
+</div>
+
+<div class="content_box" style="margin-top: 3em;">
     <h2>Data Types</h2>
-    <div>Value Types:</div>
-    <pre><code>int, char, float, double, bool, byte, short, long, decimal</code></pre>
-
-    <div>Reference Types:</div>
-    <pre><code>string, class, array, interface, delegate</code></pre>
+    <table>
+        <thead>
+        <tr><th>Data Type</th><th>Size</th><th>Range</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>int</td><td>4 bytes</td><td>−2<sup>31</sup> to 2<sup>31</sup>−1</td></tr>
+        <tr><td>long</td><td>8 bytes</td><td>−2<sup>63</sup> to 2<sup>63</sup>−1</td></tr>
+        <tr><td>float</td><td>4 bytes</td><td>~6–7 decimal digits</td></tr>
+        <tr><td>double</td><td>8 bytes</td><td>~15 decimal digits</td></tr>
+        <tr><td>decimal</td><td>16 bytes</td><td>~28–29 decimal digits (for financial calcs)</td></tr>
+        <tr><td>char</td><td>2 bytes</td><td>Unicode characters (0–65535)</td></tr>
+        <tr><td>bool</td><td>1 bit</td><td>true / false</td></tr>
+        <tr><td>string</td><td>2 bytes per char</td><td>Variable length (UTF-16)</td></tr>
+        </tbody>
+    </table>
+    <p><a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types" target="_blank">→ Data Types Documentation</a></p>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
     <h2>Variables</h2>
-    <div>In C#, variable names are written in camelCase:</div>
-    <pre><code>int num = 999;</code></pre>
-    <pre><code>string word = "Hello World";</code></pre>
-    <pre><code>bool isTrue = true;</code></pre>
-    <pre><code>double price = 19.99;</code></pre>
+    <div>Variables use camelCase naming convention:</div>
+    <pre><code>int num = 999;
+string word = "Hello World";
+bool isTrue = true;
+double price = 19.99;</code></pre>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
     <h2>Basic Syntax</h2>
     <div>Creating a class:</div>
     <pre><code>public class Person
@@ -51,27 +95,27 @@
 }</code></pre>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
     <h2>Control Structures</h2>
     <div>Conditional Statements:</div>
     <pre><code>if (condition)
 {
-    // code to execute if condition is true
+    // true block
 }
 else
 {
-    // code to execute if condition is false
+    // false block
 }</code></pre>
 
     <div>Loops:</div>
-    <div>For Loop:</div>
-    <pre><code>for (int i = 0; i < 10; i++)
+    <pre><code>// For loop
+for (int i = 0; i < 10; i++)
 {
     Console.WriteLine(i);
-}</code></pre>
+}
 
-    <div>While Loop:</div>
-    <pre><code>int i = 0;
+// While loop
+int i = 0;
 while (i < 10)
 {
     Console.WriteLine(i);
@@ -79,66 +123,120 @@ while (i < 10)
 }</code></pre>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
     <h2>Methods</h2>
-    <div>Creating a method with parameters:</div>
-    <pre><code>public int AddNumbers(int num1, int num2)
+    <div>Defining and calling a method:</div>
+    <pre><code>public int Add(int a, int b)
 {
-    return num1 + num2;
-}</code></pre>
+    return a + b;
+}
 
-    <div>Calling a method:</div>
-    <pre><code>int result = AddNumbers(5, 10);
+int result = Add(5, 10);
 Console.WriteLine(result); // Outputs: 15</code></pre>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
     <h2>Properties</h2>
-    <div>Creating a property:</div>
     <pre><code>public class Car
 {
     public string Color { get; set; }
     public string Model { get; set; }
-}</code></pre>
+}
 
-    <div>Using a property:</div>
-    <pre><code>Car myCar = new Car();
+Car myCar = new Car();
 myCar.Color = "Red";
 myCar.Model = "Toyota";
-Console.WriteLine(myCar.Color); // Outputs: Red</code></pre>
+Console.WriteLine(myCar.Color);</code></pre>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
     <h2>Arrays</h2>
-    <div>Declaring and initializing an array:</div>
-    <pre><code>int[] numbers = new int[] {1, 2, 3, 4, 5};
-string[] words = {"Hello", "World"};</code></pre>
+    <pre><code>int[] numbers = { 1, 2, 3, 4, 5 };
+string[] words = { "Hello", "World" };
 
-    <div>Accessing array elements:</div>
-    <pre><code>int firstNumber = numbers[0];
-Console.WriteLine(firstNumber); // Outputs: 1
-string firstWord = words[0];
-Console.WriteLine(firstWord); // Outputs: Hello</code></pre>
+Console.WriteLine(numbers[0]); // 1
+Console.WriteLine(words[0]);   // Hello</code></pre>
 </div>
 
-<div style="margin-top: 3em;" class="content_box">
+<div class="content_box" style="margin-top: 3em;">
     <h2>Namespaces</h2>
-    <div>Using a namespace:</div>
     <pre><code>using System;
-using System.Collections.Generic;</code></pre>
 
-    <div>Creating a namespace:</div>
-    <pre><code>namespace MyNamespace
+namespace MyNamespace
 {
     public class MyClass
     {
         public void MyMethod()
         {
-            // Method code here
+            Console.WriteLine("Inside MyMethod");
         }
     }
 }</code></pre>
+    <p><a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/namespaces/" target="_blank">→ Namespaces Documentation</a></p>
 </div>
+
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Lists</h2>
+    <pre><code>using System.Collections.Generic;
+
+List&lt;string&gt; names = new List&lt;string&gt;();
+names.Add("Alice");
+names.Add("Bob");
+
+// Access
+Console.WriteLine(names[0]); // Alice
+
+// Loop
+foreach (string name in names)
+{
+    Console.WriteLine(name);
+}
+
+// Remove
+names.Remove("Bob");</code></pre>
+    <p>
+        <a href="https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1" target="_blank">
+            → List Documentation
+        </a>
+    </p>
+</div>
+
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Dictionaries</h2>
+    <pre><code>using System.Collections.Generic;
+
+Dictionary&lt;string, int&gt; scores = new Dictionary&lt;string, int&gt;();
+scores["Alice"] = 95;
+scores["Bob"] = 87;
+
+// Access
+Console.WriteLine(scores["Alice"]); // 95
+
+// Check key
+if (scores.ContainsKey("Bob"))
+{
+    Console.WriteLine("Bob is in the dictionary.");
+}
+
+// Loop
+foreach (var kvp in scores)
+{
+    Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+}
+
+// Remove
+scores.Remove("Bob");</code></pre>
+    <p>
+        <a href="https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2" target="_blank">
+            → Dictionary Documentation
+        </a>
+    </p>
+</div>
+
+<!-- Footer -->
+<footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; color: #666;">
+    <p>This material is intended for learning purposes only and may contain inaccuracies or omissions.</p>
+</footer>
 
 </body>
 </html>

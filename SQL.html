@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SQL Server – Cheat Sheet</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body style="display: flex; flex-direction: column;">
+
+<!-- Navigation -->
+<div class="nav">
+    <a class="nav_element" href="index.html">C#</a>
+    <a class="nav_element" href="EntityFramework.html">Entity Framework</a>
+    <a class="nav_element" href="Blazor.html">Blazor</a>
+    <a class="nav_element" href="SQL.html">SQL</a>
+    <a class="nav_element" href="Recursion.html" style="font-weight: bold;">Recursion</a>
+</div>
+
+
+<!-- Header -->
+<div class="content_box">
+    <h1>Microsoft SQL Server - dev-docs</h1>
+    <p>Basic SQL queries and examples for working with Microsoft SQL Server.</p>
+    <p>
+        <a href="https://learn.microsoft.com/en-us/sql/t-sql/" target="_blank">
+            → Official SQL Server T-SQL Documentation
+        </a>
+    </p>
+</div>
+
+<!-- SELECT & WHERE -->
+<div class="content_box">
+    <h2>SELECT & WHERE</h2>
+    <pre><code>-- Select specific columns
+SELECT FirstName, LastName FROM Employees;
+
+-- Select all columns
+SELECT * FROM Employees;
+
+-- Filter with WHERE
+SELECT * FROM Employees WHERE Department = 'IT';
+
+-- WHERE with multiple conditions
+SELECT * FROM Employees
+WHERE Department = 'IT' AND Salary &gt; 50000;</code></pre>
+</div>
+
+<!-- ORDER BY, TOP, LIKE -->
+<div class="content_box">
+    <h2>ORDER BY, TOP, LIKE</h2>
+    <pre><code>-- Top 5 highest salaries
+SELECT TOP 5 * FROM Employees
+ORDER BY Salary DESC;
+
+-- Pattern matching
+SELECT * FROM Employees
+WHERE FirstName LIKE 'J%';  -- Starts with J
+
+SELECT * FROM Employees
+WHERE Email LIKE '%@example.com';  -- Ends with domain</code></pre>
+</div>
+
+<!-- JOINs -->
+<div class="content_box">
+    <h2>Joins</h2>
+    <pre><code>-- INNER JOIN: Only matching records
+SELECT e.FirstName, d.Name AS Department
+FROM Employees e
+INNER JOIN Departments d ON e.DepartmentId = d.Id;
+
+-- LEFT JOIN: All from left table, even if no match
+SELECT e.FirstName, d.Name AS Department
+FROM Employees e
+LEFT JOIN Departments d ON e.DepartmentId = d.Id;
+
+-- RIGHT JOIN: All from right table
+SELECT e.FirstName, d.Name AS Department
+FROM Employees e
+RIGHT JOIN Departments d ON e.DepartmentId = d.Id;</code></pre>
+</div>
+
+<!-- GROUP BY, COUNT, MAX -->
+<div class="content_box">
+    <h2>GROUP BY, COUNT, MAX, AVG</h2>
+    <pre><code>-- Count number of employees per department
+SELECT DepartmentId, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY DepartmentId;
+
+-- Average salary per department
+SELECT DepartmentId, AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY DepartmentId;
+
+-- Maximum salary per job title
+SELECT JobTitle, MAX(Salary) AS MaxSalary
+FROM Employees
+GROUP BY JobTitle;
+
+-- Filter aggregated results with HAVING
+SELECT DepartmentId, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY DepartmentId
+HAVING COUNT(*) &gt; 10;</code></pre>
+</div>
+
+<!-- Subqueries -->
+<div class="content_box">
+    <h2>Subqueries</h2>
+    <pre><code>-- Employees with salary above average
+SELECT * FROM Employees
+WHERE Salary &gt; (SELECT AVG(Salary) FROM Employees);
+
+-- Latest order per customer
+SELECT * FROM Orders o
+WHERE OrderDate = (
+    SELECT MAX(OrderDate)
+    FROM Orders
+    WHERE CustomerId = o.CustomerId
+);</code></pre>
+</div>
+
+<!-- Useful Clauses -->
+<div class="content_box">
+    <h2>Other Useful Clauses</h2>
+    <pre><code>-- DISTINCT values
+SELECT DISTINCT Country FROM Customers;
+
+-- BETWEEN range
+SELECT * FROM Orders
+WHERE OrderDate BETWEEN '2024-01-01' AND '2024-12-31';
+
+-- IN clause
+SELECT * FROM Employees
+WHERE Department IN ('IT', 'HR');</code></pre>
+</div>
+
+<!-- Footer -->
+<footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; color: #666;">
+    <p>This material is intended for learning purposes only and may contain inaccuracies or omissions.</p>
+</footer>
+
+</body>
+</html>
