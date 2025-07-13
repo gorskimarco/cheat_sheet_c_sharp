@@ -135,6 +135,11 @@
             userName = user.Identity.Name;
         }
     }
+
+        // alternative
+
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        var userId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
 }</code></pre>
 
     <p>
@@ -143,6 +148,46 @@
         </a>
     </p>
 </div>
+
+<!-- Search and Filter Blog Posts -->
+<div class="content_box">
+    <h2>Search and Filter Blog Posts</h2>
+    <p>Demonstrates how to bind an input to a search term and filter a list of blog posts.</p>
+
+    <h3>Search Input</h3>
+    <pre><code>&lt;div class="mb-3"&gt;
+    &lt;input class="form-control" @bind="SearchTerm" placeholder="Search blog title or author..." /&gt;
+&lt;/div&gt;</code></pre>
+
+    <h3>Filter Logic</h3>
+    <pre><code>@code {
+    private string SearchTerm = string.Empty;
+
+    private List&lt;BlogPost&gt; BlogPosts = new()
+    {
+        new BlogPost { Title = "Understanding Blazor Server", Author = "Alice" },
+        new BlogPost { Title = "Blazor WebAssembly vs Server", Author = "Bob" },
+        new BlogPost { Title = "C# Async Programming", Author = "Charlie" },
+        new BlogPost { Title = "Entity Framework Basics", Author = "Alice" }
+    };
+
+    private IEnumerable&lt;BlogPost&gt; FilteredBlogPosts =&gt;
+        string.IsNullOrWhiteSpace(SearchTerm)
+            ? BlogPosts
+            : BlogPosts.Where(post =&gt;
+                (post.Title?.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (post.Author?.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ?? false));
+
+    public class BlogPost
+    {
+        public string? Title { get; set; }
+        public string? Author { get; set; }
+    }
+}</code></pre>
+
+    <p>This example binds the input to <code>SearchTerm</code> and filters a list of posts by title or author.</p>
+</div>
+
 
 </body>
 <footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; background-color: #f0f0f0; color: #666;">
