@@ -19,9 +19,9 @@
 <!-- Header -->
 <div class="content_box">
     <h1>C# Recursion – dev-docs</h1>
-    <p>Examples for recursive functions in C#: Directory traversal and binary trees.</p>
+    <p>Examples of recursive functions in C#: directory traversal, binary trees, and console file search.</p>
     <p>
-        <a href="https://learn.microsoft.com/en-us/cpp/c-language/recursive-functions?view=msvc-170" target="_blank">
+        <a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/recursion" target="_blank">
             → Official Recursion Documentation
         </a>
     </p>
@@ -30,21 +30,20 @@
 <!-- Section: What is Recursion -->
 <div class="content_box">
     <h2>What is Recursion?</h2>
-    <p>Recursion is when a method calls itself to solve a smaller part of the overall problem.</p>
-    <pre><code>void Recurse()
+    <p>Recursion is when a method calls itself to solve a smaller part of a problem. Make sure to define a base case to avoid infinite loops.</p>
+    <pre><code>void Recurse(int count)
 {
-    // Base case
-    if (condition)
+    if (count == 0)
         return;
 
-    // Recursive call
-    Recurse();
+    Console.WriteLine(count);
+    Recurse(count - 1); // Recursive call
 }</code></pre>
 </div>
 
 <!-- Section: Recursive File Search -->
 <div class="content_box">
-    <h2>Example 1 – Recursive File Search</h2>
+    <h2>Example 1 – Recursive File Search (Basic)</h2>
     <p>Scan a directory and its subdirectories for all files.</p>
     <pre><code>using System;
 using System.IO;
@@ -73,10 +72,58 @@ void ScanDirectory(string path)
 ScanDirectory("C:\\MyFolder");</code></pre>
 </div>
 
+<!-- Section: Console File Search -->
+<div class="content_box">
+    <h2>Example 2 – Recursive File Search (Console App)</h2>
+    <p>Command-line program that searches all files in a directory (optional: filter by extension).</p>
+    <pre><code>using System;
+using System.IO;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Usage: FileSearch &lt;path&gt; [&lt;extension&gt;]");
+            return;
+        }
+
+        string path = args[0];
+        string? ext = args.Length &gt; 1 ? args[1] : null;
+
+        Search(path, ext);
+    }
+
+    static void Search(string path, string? extension)
+    {
+        try
+        {
+            foreach (var file in Directory.GetFiles(path))
+            {
+                if (extension == null || file.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine(file);
+                }
+            }
+
+            foreach (var dir in Directory.GetDirectories(path))
+            {
+                Search(dir, extension);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}</code></pre>
+</div>
+
 <!-- Section: Binary Tree Traversal -->
 <div class="content_box">
-    <h2>Example 2 – Binary Tree Traversal</h2>
-    <p>Recursively visit each node in a binary tree (in-order traversal).</p>
+    <h2>Example 3 – Binary Tree In-Order Traversal</h2>
+    <p>Recursively visit each node in a binary tree (left → root → right).</p>
     <pre><code>public class TreeNode
 {
     public int Value;
@@ -98,7 +145,7 @@ void TraverseInOrder(TreeNode? node)
     TraverseInOrder(node.Right);
 }
 
-// Example Tree
+// Example usage
 var root = new TreeNode(10)
 {
     Left = new TreeNode(5),
@@ -109,7 +156,7 @@ TraverseInOrder(root);</code></pre>
 
     <p>
         <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/common-collections" target="_blank">
-            → Tree structures and collections
+            → Tree Structures and Collections
         </a>
     </p>
 </div>

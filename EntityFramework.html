@@ -10,17 +10,16 @@
 <!-- Navigation -->
 <div class="nav">
     <a class="nav_element" href="index.html">C#</a>
-    <a class="nav_element" href="EntityFramework.html">Entity Framework</a>
+    <a class="nav_element" href="EntityFramework.html" style="font-weight: bold;">Entity Framework</a>
     <a class="nav_element" href="Blazor.html">Blazor</a>
     <a class="nav_element" href="SQL.html">SQL</a>
-    <a class="nav_element" href="Recursion.html" style="font-weight: bold;">Recursion</a>
+    <a class="nav_element" href="Recursion.html">Recursion</a>
 </div>
-
 
 <!-- Header -->
 <div class="content_box">
     <h1>Entity Framework Core – dev-docs</h1>
-    <p>Example: Blog system with <code>Post</code> entity, service layer, seeding, and database view.</p>
+    <p>Example: Blog system with <code>Post</code> entity, service layer, seeding, many-to-many tagging, and database view.</p>
     <p>
         <a href="https://learn.microsoft.com/en-us/ef/core/" target="_blank">
             → Official Entity Framework Core Documentation
@@ -30,11 +29,8 @@
 
 <!-- Model Example -->
 <div class="content_box" style="margin-top: 3em;">
-    <h2>Entity Model – <code>Post</code> Example</h2>
-    <p>
-        This model defines a blog post using data annotations like
-        <code>[Key]</code>, <code>[Required]</code>, and <code>[MaxLength]</code> for validation and DB schema control.
-    </p>
+    <h2>Post + Tag + PostTag (Many-to-Many)</h2>
+    <p>Post and Tag entities joined with PostTag, using a defined key and DeleteBehavior.Restrict.</p>
     <pre><code>public class Post
 {
     [Key]
@@ -48,23 +44,42 @@
     public string Content { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
+}
+
+public class Tag
+{
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    public ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
+}
+
+public class PostTag
+{
+    [Key]
+    public int Id { get; set; }
+
+    public int PostId { get; set; }
+    public Post Post { get; set; } = null!;
+
+    public int TagId { get; set; }
+    public Tag Tag { get; set; } = null!;
 }</code></pre>
 </div>
 
 <!-- DbContext -->
 <div class="content_box">
     <h3>ApplicationDbContext with Seeder and View</h3>
-    <p>
-        The <code>DbContext</code> defines access to the database. This example shows:
-    </p>
-    <ul>
-        <li><code>DbSet&lt;Post&gt;</code> and <code>DbSet&lt;PostStatsView&gt;</code></li>
-        <li>Data seeding with <code>HasData()</code></li>
-        <li>View configuration via <code>HasNoKey().ToView("PostStats")</code></li>
-    </ul>
     <pre><code>public class ApplicationDbContext : DbContext
 {
     public DbSet<Post> Posts { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<PostTag> PostTags { get; set; }
     public DbSet<PostStatsView> PostStatsViews { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
@@ -73,123 +88,50 @@
     {
         base.OnModelCreating(builder);
 
-        builder.Entity&lt;Post&gt;().HasKey(p => p.Id);
-
-        builder.Entity&lt;Post&gt;().HasData(
+        builder.Entity<Post>().HasData(
             new Post { Id = 1, Title = "Hello World", Content = "This is my first post!", CreatedAt = DateTime.UtcNow }
         );
 
-        builder.Entity&lt;PostStatsView&gt;()
+        builder.Entity<Tag>().HasData(
+            new Tag { Id = 1, Name = "C#" },
+            new Tag { Id = 2, Name = "EF Core" }
+        );
+
+        builder.Entity<PostStatsView>()
                .HasNoKey()
                .ToView("PostStats");
+
+        builder.Entity<PostTag>()
+            .HasOne(pt => pt.Post)
+            .WithMany(p => p.PostTags)
+            .HasForeignKey(pt => pt.PostId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<PostTag>()
+            .HasOne(pt => pt.Tag)
+            .WithMany(t => t.PostTags)
+            .HasForeignKey(pt => pt.TagId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }</code></pre>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/ef/core/modeling/" target="_blank">
-            → EF Core Model Building Docs
-        </a>
-    </p>
 </div>
 
 <!-- View Model -->
 <div class="content_box">
     <h3>PostStatsView – Database View</h3>
-    <p>
-        This model maps to a SQL view and is useful for read-only reports or dashboards.
-    </p>
     <pre><code>public class PostStatsView
 {
     public int TotalPosts { get; set; }
     public DateTime LatestPost { get; set; }
 }</code></pre>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/ef/core/querying/keyless-entity-types" target="_blank">
-            → Keyless Entities & Views
-        </a>
-    </p>
-</div>
-
-<!-- Service Layer -->
-<div class="content_box">
-    <h3>PostService with CRUD Methods</h3>
-    <p>
-        This service encapsulates logic for Create, Read, and Delete operations, separating concerns from controllers or UI code.
-    </p>
-    <pre><code>public class PostService
-{
-    private readonly ApplicationDbContext _context;
-
-    public PostService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-    public async Task&lt;List&lt;Post&gt;&gt; GetAllPostsAsync()
-    {
-        return await _context.Posts.ToListAsync();
-    }
-
-    public async Task&lt;Post?&gt; GetPostByIdAsync(int id)
-    {
-        return await _context.Posts.FindAsync(id);
-    }
-
-    public async Task&lt;bool&gt; CreatePostAsync(Post post)
-    {
-        try
-        {
-            await _context.Posts.AddAsync(post);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    public async Task&lt;bool&gt; DeletePostAsync(int id)
-    {
-        var post = await _context.Posts.FindAsync(id);
-        if (post == null) return false;
-
-        _context.Posts.Remove(post);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-}</code></pre>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/ef/core/saving/" target="_blank">
-            → Saving Data Docs
-        </a>
-    </p>
 </div>
 
 <!-- Program.cs -->
 <div class="content_box">
     <h3>Program.cs – Register Context & Service</h3>
-    <p>Configure your connection string and register the database context and service.</p>
-
-    <pre><code>// appsettings.json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=BlogDb;Trusted_Connection=True;"
-  }
-}</code></pre>
-
-    <pre><code>// Program.cs
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddScoped&lt;PostService&gt;();</code></pre>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext" target="_blank">
-            → Configuring DbContext Docs
-        </a>
-    </p>
+    <pre><code>builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+</code></pre>
 </div>
 
 <!-- Footer -->

@@ -12,10 +12,9 @@
     <a class="nav_element" href="index.html">C#</a>
     <a class="nav_element" href="EntityFramework.html">Entity Framework</a>
     <a class="nav_element" href="Blazor.html">Blazor</a>
-    <a class="nav_element" href="SQL.html">SQL</a>
-    <a class="nav_element" href="Recursion.html" style="font-weight: bold;">Recursion</a>
+    <a class="nav_element" href="SQL.html" style="font-weight: bold;">SQL</a>
+    <a class="nav_element" href="Recursion.html">Recursion</a>
 </div>
-
 
 <!-- Header -->
 <div class="content_box">
@@ -58,6 +57,41 @@ WHERE FirstName LIKE 'J%';  -- Starts with J
 
 SELECT * FROM Employees
 WHERE Email LIKE '%@example.com';  -- Ends with domain</code></pre>
+</div>
+
+<!-- INSERT, UPDATE, DELETE -->
+<div class="content_box">
+    <h2>INSERT, UPDATE, DELETE</h2>
+    <pre><code>-- Insert new record
+INSERT INTO Employees (FirstName, LastName, Department, Salary)
+VALUES ('Alice', 'Smith', 'IT', 70000);
+
+-- Update existing record
+UPDATE Employees
+SET Salary = 75000
+WHERE FirstName = 'Alice';
+
+-- Delete record
+DELETE FROM Employees
+WHERE FirstName = 'Alice';</code></pre>
+</div>
+
+<!-- CREATE and ALTER TABLE -->
+<div class="content_box">
+    <h2>CREATE and ALTER TABLE</h2>
+    <pre><code>-- Create new table
+CREATE TABLE Departments (
+    Id INT PRIMARY KEY,
+    Name NVARCHAR(50)
+);
+
+-- Alter existing table
+ALTER TABLE Employees
+ADD HireDate DATE;
+
+-- Drop column
+ALTER TABLE Employees
+DROP COLUMN HireDate;</code></pre>
 </div>
 
 <!-- JOINs -->
@@ -120,7 +154,7 @@ WHERE OrderDate = (
 );</code></pre>
 </div>
 
-<!-- Useful Clauses -->
+<!-- Other Clauses -->
 <div class="content_box">
     <h2>Other Useful Clauses</h2>
     <pre><code>-- DISTINCT values
@@ -132,7 +166,73 @@ WHERE OrderDate BETWEEN '2024-01-01' AND '2024-12-31';
 
 -- IN clause
 SELECT * FROM Employees
-WHERE Department IN ('IT', 'HR');</code></pre>
+WHERE Department IN ('IT', 'HR');
+
+-- IS NULL check
+SELECT * FROM Employees
+WHERE ManagerId IS NULL;</code></pre>
+</div>
+
+<!-- Indexes and Constraints -->
+<div class="content_box">
+    <h2>Indexes & Constraints</h2>
+    <pre><code>-- Create index
+CREATE INDEX idx_LastName ON Employees(LastName);
+
+-- Add unique constraint
+ALTER TABLE Employees
+ADD CONSTRAINT UQ_Email UNIQUE (Email);
+
+-- Add foreign key
+ALTER TABLE Employees
+ADD CONSTRAINT FK_Department FOREIGN KEY (DepartmentId)
+REFERENCES Departments(Id);</code></pre>
+</div>
+
+<!-- Stored Procedures -->
+<div class="content_box">
+    <h2>Stored Procedures</h2>
+    <pre><code>-- Create procedure
+CREATE PROCEDURE GetEmployeesByDept
+    @Dept NVARCHAR(50)
+AS
+BEGIN
+    SELECT * FROM Employees
+    WHERE Department = @Dept;
+END;
+
+-- Execute
+EXEC GetEmployeesByDept @Dept = 'IT';</code></pre>
+</div>
+
+<!-- User-Defined Functions -->
+<div class="content_box">
+    <h2>User-Defined Functions</h2>
+    <pre><code>-- Scalar function
+CREATE FUNCTION dbo.GetYearOnly (@date DATE)
+RETURNS INT
+AS
+BEGIN
+    RETURN YEAR(@date);
+END;
+
+-- Use it
+SELECT dbo.GetYearOnly(HireDate) FROM Employees;</code></pre>
+</div>
+
+<!-- Transactions -->
+<div class="content_box">
+    <h2>Transactions</h2>
+    <pre><code>BEGIN TRANSACTION;
+
+UPDATE Accounts SET Balance = Balance - 100 WHERE Id = 1;
+UPDATE Accounts SET Balance = Balance + 100 WHERE Id = 2;
+
+-- Rollback on error or COMMIT
+IF @@ERROR &lt;&gt; 0
+    ROLLBACK;
+ELSE
+    COMMIT;</code></pre>
 </div>
 
 <!-- Footer -->

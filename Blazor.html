@@ -11,11 +11,10 @@
 <div class="nav">
     <a class="nav_element" href="index.html">C#</a>
     <a class="nav_element" href="EntityFramework.html">Entity Framework</a>
-    <a class="nav_element" href="Blazor.html">Blazor</a>
+    <a class="nav_element" href="Blazor.html" style="font-weight: bold;">Blazor</a>
     <a class="nav_element" href="SQL.html">SQL</a>
-    <a class="nav_element" href="Recursion.html" style="font-weight: bold;">Recursion</a>
+    <a class="nav_element" href="Recursion.html">Recursion</a>
 </div>
-
 
 <!-- Header -->
 <div class="content_box">
@@ -28,66 +27,106 @@
     </p>
 </div>
 
-<!-- RenderMode -->
+<!-- Render Mode -->
 <div class="content_box">
     <h2>Render Mode</h2>
     <pre><code>&lt;component type="typeof(App)" render-mode="InteractiveServer" /&gt;</code></pre>
     <p>Use in <code>_Host.cshtml</code> for Blazor Server. Enables SignalR-based interaction.</p>
 </div>
 
-<!-- Lifecycle Methods -->
+<!-- Lifecycle Hooks -->
 <div class="content_box">
     <h2>Lifecycle Hooks</h2>
     <pre><code>@code {
     protected override void OnInitialized()
     {
-        // Runs once when component is initialized
+        // Runs when the component is initialized
     }
 
     protected override async Task OnInitializedAsync()
     {
-        // Async version for fetching data
+        // Async init logic
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // Code after first render (e.g. JS interop)
+            // Runs once after first render
         }
     }
 }</code></pre>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle" target="_blank">
-            → Component Lifecycle Docs
-        </a>
-    </p>
 </div>
 
 <!-- Data Binding -->
 <div class="content_box">
-    <h2>Data Binding</h2>
+    <h2>Two-Way Data Binding</h2>
     <pre><code>&lt;input @bind="username" /&gt;
 
 @code {
     private string username = string.Empty;
 }</code></pre>
-    <p><code>@bind</code> creates two-way binding for inputs and other form elements.</p>
 </div>
 
-<!-- Events -->
+<!-- Events: oninput and onchange -->
 <div class="content_box">
-    <h2>Click Events & Event Handler</h2>
+    <h2>Input Events: @oninput and @onchange</h2>
+    <pre><code>&lt;input @oninput="HandleInput" placeholder="Type something..." /&gt;
+&lt;input @onchange="HandleChange" placeholder="Change triggers on blur" /&gt;
+
+@code {
+    private string currentValue = "";
+
+    private void HandleInput(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+        currentValue = value ?? "";
+    }
+
+    private void HandleChange(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+        Console.WriteLine($"Changed to: {value}");
+    }
+}</code></pre>
+</div>
+
+<!-- Parsing string to int -->
+<div class="content_box">
+    <h2>Parse string to int (with validation)</h2>
+    <pre><code>&lt;input @oninput="HandleIntInput" placeholder="Enter number" /&gt;
+
+@code {
+    private string inputValue = "";
+    private int parsedValue = 0;
+
+    private void HandleIntInput(ChangeEventArgs e)
+    {
+        inputValue = e.Value?.ToString() ?? "";
+        if (int.TryParse(inputValue, out int result))
+        {
+            parsedValue = result;
+        }
+    }
+}</code></pre>
+</div>
+
+<!-- Click Events -->
+<div class="content_box">
+    <h2>Click Events</h2>
     <pre><code>&lt;button @onclick="SayHello"&gt;Click me&lt;/button&gt;
 
 @code {
     private void SayHello()
     {
-        Console.WriteLine("Hello!");
+        Console.WriteLine("Hello from Blazor Server!");
     }
 }</code></pre>
+</div>
 
-    <h3>With Parameters</h3>
+<!-- Event with parameter -->
+<div class="content_box">
+    <h2>Events With Parameters</h2>
     <pre><code>&lt;button @onclick="() =&gt; GreetUser("Alice")"&gt;Greet Alice&lt;/button&gt;
 
 @code {
@@ -98,100 +137,58 @@
 }</code></pre>
 </div>
 
-<!-- [Authorize] and Identity -->
+<!-- Filter/Search List Example -->
 <div class="content_box">
-    <h2>Authorization & Identity</h2>
-    <h3>Use [Authorize] Attribute</h3>
-    <pre><code>@attribute [Authorize]</code></pre>
-    <p>Restricts access to authenticated users only.</p>
+    <h2>Search and Filter a List</h2>
+    <pre><code>&lt;input @bind="SearchTerm" placeholder="Search..." /&gt;
 
-    <h3>With Roles</h3>
-    <pre><code>@attribute [Authorize(Roles = "Admin")]</code></pre>
-    <p>Only users in the <code>Admin</code> role may access this component.</p>
+&lt;ul&gt;
+    @foreach (var item in FilteredItems)
+    {
+        &lt;li&gt;@item&lt;/li&gt;
+    }
+&lt;/ul&gt;
 
-    <h3>Show/Hide in Markup</h3>
-    <pre><code>&lt;AuthorizeView&gt;
+@code {
+    private string SearchTerm = "";
+
+    private List&lt;string&gt; Items = new()
+    {
+        "Blazor",
+        "C#",
+        "SignalR",
+        "WebAssembly",
+        "ASP.NET Core"
+    };
+
+    private IEnumerable&lt;string&gt; FilteredItems =&gt;
+        string.IsNullOrWhiteSpace(SearchTerm)
+            ? Items
+            : Items.Where(i =&gt;
+                i.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
+}</code></pre>
+</div>
+
+<!-- Authorization -->
+<div class="content_box">
+    <h2>Authorization</h2>
+    <pre><code>@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
+
+&lt;AuthorizeView&gt;
     &lt;Authorized&gt;
-        &lt;p&gt;You are logged in!&lt;/p&gt;
+        &lt;p&gt;Welcome, user!&lt;/p&gt;
     &lt;/Authorized&gt;
     &lt;NotAuthorized&gt;
         &lt;p&gt;Please sign in.&lt;/p&gt;
     &lt;/NotAuthorized&gt;
 &lt;/AuthorizeView&gt;</code></pre>
-
-    <h3>Inject Authentication State</h3>
-    <pre><code>@inject AuthenticationStateProvider AuthenticationStateProvider
-
-@code {
-    private string? userName;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            userName = user.Identity.Name;
-        }
-    }
-
-        // alternative
-
-        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-        var userId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-}</code></pre>
-
-    <p>
-        <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/security/" target="_blank">
-            → Blazor Security Docs
-        </a>
-    </p>
 </div>
 
-<!-- Search and Filter Blog Posts -->
-<div class="content_box">
-    <h2>Search and Filter Blog Posts</h2>
-    <p>Demonstrates how to bind an input to a search term and filter a list of blog posts.</p>
-
-    <h3>Search Input</h3>
-    <pre><code>&lt;div class="mb-3"&gt;
-    &lt;input class="form-control" @bind="SearchTerm" placeholder="Search blog title or author..." /&gt;
-&lt;/div&gt;</code></pre>
-
-    <h3>Filter Logic</h3>
-    <pre><code>@code {
-    private string SearchTerm = string.Empty;
-
-    private List&lt;BlogPost&gt; BlogPosts = new()
-    {
-        new BlogPost { Title = "Understanding Blazor Server", Author = "Alice" },
-        new BlogPost { Title = "Blazor WebAssembly vs Server", Author = "Bob" },
-        new BlogPost { Title = "C# Async Programming", Author = "Charlie" },
-        new BlogPost { Title = "Entity Framework Basics", Author = "Alice" }
-    };
-
-    private IEnumerable&lt;BlogPost&gt; FilteredBlogPosts =&gt;
-        string.IsNullOrWhiteSpace(SearchTerm)
-            ? BlogPosts
-            : BlogPosts.Where(post =&gt;
-                (post.Title?.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (post.Author?.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ?? false));
-
-    public class BlogPost
-    {
-        public string? Title { get; set; }
-        public string? Author { get; set; }
-    }
-}</code></pre>
-
-    <p>This example binds the input to <code>SearchTerm</code> and filters a list of posts by title or author.</p>
-</div>
-
-
-</body>
+<!-- Footer -->
 <footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; background-color: #f0f0f0; color: #666;">
     <p>This material is intended for learning purposes only and may contain inaccuracies or omissions.</p>
 </footer>
 
+</body>
 </html>
